@@ -28,6 +28,12 @@ jobs:
           ANDROID_NDK="${{ steps.ndk.outputs.ndk-path }}" \
             bash android/build-deps.sh "$HOME/android-deps"
 
+      - name: Fetch missing submodules
+        run: |
+          rm -rf src/3rdparty/rpmalloc/rpmalloc src/3rdparty/qt5-x11embed
+          git clone --depth 1 https://github.com/rampantpixels/rpmalloc.git src/3rdparty/rpmalloc/rpmalloc
+          git clone --depth 1 https://github.com/Lukas-W/qt5-x11embed.git src/3rdparty/qt5-x11embed
+
       - name: Configure LMMS
         run: |
           export PKG_CONFIG_LIBDIR="$HOME/android-deps/lib/pkgconfig"
