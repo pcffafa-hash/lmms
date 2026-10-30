@@ -1,0 +1,25 @@
+name: Android Build
+on: [push, workflow_dispatch]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+      - name: Keystore
+        run: echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 -d > $RUNNER_TEMP/lmms.jks
+      - name: Build
+        working-directory: android
+        run: ./gradlew assembleRelease
+        env:
+          KEYSTORE_PATH: ${{ runner.temp }}/lmms.jks
+          KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+          KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
+          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+      - uses: actions/upload-artifact@v4
+        with:
+          name: lmms-apk
+          path: android/**/build/outputs/apk/release/*.apk
