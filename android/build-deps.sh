@@ -33,8 +33,12 @@ build libsamplerate https://github.com/libsndfile/libsamplerate.git 0.2.2 \
 build libsndfile  https://github.com/libsndfile/libsndfile.git      1.2.2 \
   -DBUILD_PROGRAMS=OFF -DBUILD_EXAMPLES=OFF -DBUILD_TESTING=OFF \
   -DENABLE_EXTERNAL_LIBS=OFF -DENABLE_MPEG=OFF
-# fftw3f: single precision, no Fortran/threads
-build fftw3       https://github.com/FFTW/fftw3.git                 fftw-3.3.10 \
+
+# fftw3f: Release-Tarball nutzen (Git-Repo enthaelt die Codelets nicht)
+curl -L https://www.fftw.org/fftw-3.3.10.tar.gz | tar -xz -C "$WORK"
+cmake -S "$WORK/fftw-3.3.10" -B "$WORK/fftw-3.3.10/build" "${cmake_common[@]}" \
   -DENABLE_FLOAT=ON -DENABLE_THREADS=OFF -DBUILD_TESTS=OFF
+cmake --build "$WORK/fftw-3.3.10/build" -j"$(nproc)"
+cmake --install "$WORK/fftw-3.3.10/build"
 
 echo "Dependencies installed to $PREFIX"
