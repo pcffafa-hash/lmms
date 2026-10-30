@@ -26,7 +26,7 @@ jobs:
         run: |
           sudo apt-get update && sudo apt-get install -y cmake ninja-build pkg-config
           ANDROID_NDK="${{ steps.ndk.outputs.ndk-path }}" \
-            android/build-deps.sh "$HOME/android-deps"
+            bash android/build-deps.sh "$HOME/android-deps"
 
       - name: Configure LMMS
         run: |
